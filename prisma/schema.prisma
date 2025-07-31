@@ -1,0 +1,1115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Employee XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// Employee Global Data
+//rdy
+model EmployeeRole {
+  id                             String                        @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                      DateTime?                     @default(now())
+  updatedAt                      DateTime?                     @updatedAt
+  role                           String?
+  employeeProjectsEmployeeRoleID String?
+  employeeProjectsEmployeeRole   EmployeeProjectEmployeeRole[] @relation("EmployeeProjectEmployeeRoleToEmployeeRole")
+}
+
+//rdy
+model Salutation {
+  id                      String                 @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt               DateTime?              @default(now())
+  updatedAt               DateTime?              @updatedAt
+  salutationShort         String?
+  salutationLong          String?
+  organisationContactsIDs String[]               @db.ObjectId
+  organisationContacts    OrganisationContacts[] @relation(fields: [organisationContactsIDs], references: [id])
+  employeeIDs             String[]               @db.ObjectId
+  employees               Employee[]             @relation(fields: [employeeIDs], references: [id])
+}
+
+// Employee Model
+//rdy 
+model Employee {
+  id                String           @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt         DateTime?        @default(now())
+  updatedAt         DateTime?        @updatedAt
+  clerkId           String?
+  foreName          String
+  lastName          String
+  pseudonym         String?
+  salutationIDs     String[]         @db.ObjectId
+  titles            Salutation[]     @relation(fields: [salutationIDs], references: [id])
+  employeerCompany  String           @default("Ernst & Young GmbH WPG")
+  counselorIDs      String?          @db.ObjectId
+  counselor         Employee?        @relation("EmployeeToEmployee", fields: [counselorIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  counselee         Employee[]       @relation("EmployeeToEmployee")
+  employeeRankIDs   String?          @db.ObjectId
+  employeeRank      EmployeeRank?    @relation(fields: [employeeRankIDs], references: [id])
+  locationIDs       String?          @db.ObjectId
+  location          Location?        @relation(fields: [locationIDs], references: [id])
+  contractStartDate DateTime?
+  description       String?
+  mobile            String?
+  telephone         String?
+  linkedInURL       String?
+  xingURL           String?
+  discoverURL       String?
+  experienceIt      Int              @default(0)
+  experienceIs      Int              @default(0)
+  experienceItGs    Int              @default(0)
+  experienceGps     Int              @default(0)
+  experienceOther   Int              @default(0)
+  experienceAll     Int              @default(0)
+  employeeSkillsIDs String[]         @db.ObjectId
+  employeeSkills    EmployeeSkills[] @relation("EmployeeToEmployeeSkills", fields: [employeeSkillsIDs], references: [id])
+
+  employeeCertificates        EmployeeCertificates[]        @relation("EmployeeToEmployeeCertificates")
+  academicDegree              AcademicDegree[]              @relation("EmployeeToAcademicDegree")
+  securityClearance           SecurityClearance[]           @relation("EmployeeToSecurityClearance")
+  professionalBackground      ProfessionalBackground[]      @relation("EmployeeToProfessionalBackground")
+  employeeProjectActivities   EmployeeProjectActivities[]   @relation("EmployeeToEmployeeProjectActivities")
+  voccational                 Voccational[]                 @relation("EmployeeToVoccational")
+  employeeExternalProjects    EmployeeExternalProjects[]    @relation("EmployeeToEmployeeExternalProjects")
+  callToTender                CallToTenderEmployee[]        @relation("EmployeeToCallToTender")
+  employeeProjectEmployeeRole EmployeeProjectEmployeeRole[] @relation("EmployeeToEmployeeProjectEmployeeRole")
+  employeeTrainings           EmployeeTraining[]            @relation("EmployeeToTraining")
+  assignedTasks               Task[]                        @relation("AssignedTasks")
+  createdTasks                Task[]                        @relation("CreatedTasks")
+
+  // Add these new relations
+  managedDivisions Division[] @relation("DivisionManager")
+  division         Division?  @relation("DivisionMembers", fields: [divisionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  divisionId       String?    @db.ObjectId
+  
+  // Search Orders relation
+  createdSearchOrders SearchOrder[] @relation("CreatedSearchOrders")
+
+  @@map("Employee")
+}
+
+// Employee Individual Data
+
+//rdy
+model Voccational {
+  id                    String          @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt             DateTime?       @default(now())
+  updatedAt             DateTime?       @updatedAt
+  employeeIDs           String          @db.ObjectId
+  employee              Employee        @relation("EmployeeToVoccational", fields: [employeeIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  industrySectorIDs     String?         @db.ObjectId
+  industrySector        IndustrySector? @relation(fields: [industrySectorIDs], references: [id])
+  voccationalTitleShort String?
+  voccationalTitleLong  String?
+  voccationalMINT       Boolean?        @default(false)
+  company               String?
+  voccationalStart      DateTime?
+  voccationalEnd        DateTime?
+
+  @@map("Voccational")
+}
+
+//rdy
+model AcademicDegree {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt        DateTime? @default(now())
+  updatedAt        DateTime? @updatedAt
+  employeeIDs      String    @db.ObjectId
+  employee         Employee  @relation("EmployeeToAcademicDegree", fields: [employeeIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  degreeTitleShort String?
+  degreeTitleLong  String?
+  completed        Boolean?  @default(true)
+  study            String?
+  studyStart       DateTime?
+  studyEnd         DateTime?
+  university       String?
+  studyMINT        Boolean?
+
+  @@map("AcademicDegree")
+}
+
+//rdy
+model ProfessionalBackground {
+  id                       String                     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                DateTime?                  @default(now())
+  updatedAt                DateTime?                  @updatedAt
+  employeeIDs              String                     @db.ObjectId
+  employee                 Employee                   @relation("EmployeeToProfessionalBackground", fields: [employeeIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  industrySectorIDs        String?                    @db.ObjectId
+  industrySector           IndustrySector?            @relation(fields: [industrySectorIDs], references: [id])
+  position                 String?
+  executivePosition        Boolean?                   @default(false)
+  employer                 String?
+  description              String?
+  professionStart          DateTime?
+  professionEnd            DateTime?
+  experienceIt             Int?                       @default(0)
+  experienceIs             Int?                       @default(0)
+  experienceItGs           Int?                       @default(0)
+  experienceGps            Int?                       @default(0)
+  experienceOther          Int?                       @default(0)
+  experienceAll            Int?                       @default(0)
+  employeeExternalProjects EmployeeExternalProjects[] @relation("ProfessionalBackgroundToEmployeeExternalProjects")
+
+  @@map("ProfessionalBackground")
+}
+
+//rdy
+model EmployeeRank {
+  id                    String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt             DateTime?  @default(now())
+  updatedAt             DateTime?  @updatedAt
+  employeePositionShort String     @unique
+  employeePositionLong  String     @unique
+  employee              Employee[]
+  employeeCostStraight  Float?
+}
+
+//rdy
+model EmployeeSkills {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime?  @default(now())
+  updatedAt   DateTime?  @updatedAt
+  niveau      String?
+  employeeIDs String[]   @db.ObjectId
+  employees   Employee[] @relation("EmployeeToEmployeeSkills", fields: [employeeIDs], references: [id])
+  skillIDs    String     @db.ObjectId
+  skills      Skills     @relation(fields: [skillIDs], references: [id])
+
+  @@map("EmployeeSkills")
+}
+
+//rdy
+model Skills {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime?        @default(now())
+  updatedAt      DateTime?        @updatedAt
+  title          String?
+  type           String?
+  description    String?
+  employeeSkills EmployeeSkills[]
+}
+
+//rdy
+model EmployeeCertificates {
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime?   @default(now())
+  updatedAt      DateTime?   @updatedAt
+  employeeIDs    String      @db.ObjectId
+  employee       Employee    @relation("EmployeeToEmployeeCertificates", fields: [employeeIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  certificateIDs String      @db.ObjectId
+  certificate    Certificate @relation(fields: [certificateIDs], references: [id])
+  validUntil     DateTime?
+  issuer         String?
+
+  @@map("EmployeeCertificates")
+}
+
+//rdy
+model SecurityClearance {
+  id                     String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt              DateTime? @default(now())
+  updatedAt              DateTime? @updatedAt
+  employeeIDs            String    @db.ObjectId
+  employee               Employee  @relation("EmployeeToSecurityClearance", fields: [employeeIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  approved               Boolean?  @default(false)
+  securityClearanceType  String?
+  securityClearanceLevel String?
+  applicationDate        DateTime?
+
+  @@map("SecurityClearance")
+}
+
+model EmployeeProjectActivities {
+  id                           String                        @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                    DateTime?                     @default(now())
+  updatedAt                    DateTime?                     @updatedAt
+  employeeIDs                  String                        @db.ObjectId
+  employee                     Employee                      @relation("EmployeeToEmployeeProjectActivities", fields: [employeeIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  projectIDs                   String                        @db.ObjectId
+  project                      Project                       @relation("ProjectToEmployeeProjectActivities", fields: [projectIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  description                  String
+  operationalPeriodStart       DateTime
+  operationalPeriodEnd         DateTime
+  operationalDays              Int                           @default(0)
+  employeeProjectEmployeeRoles EmployeeProjectEmployeeRole[] @relation("EmployeeProjectEmployeeRoleToEmployeeProjectActivities")
+
+  @@map("EmployeeProjectActivities")
+}
+
+//rdy
+model EmployeeExternalProjects {
+  id                        String                 @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                 DateTime?              @default(now())
+  updatedAt                 DateTime?              @updatedAt
+  professionalBackgroundIDs String                 @db.ObjectId
+  professionalBackground    ProfessionalBackground @relation("ProfessionalBackgroundToEmployeeExternalProjects", fields: [professionalBackgroundIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  employeeIDs               String                 @db.ObjectId
+  employee                  Employee               @relation("EmployeeToEmployeeExternalProjects", fields: [employeeIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  employeeProjectRole       String?
+  projectTitle              String?
+  description               String?
+  projectStart              DateTime?
+  projectEnd                DateTime?
+  operationalDays           Int?                   @default(0)
+  keywords                  String[]
+  experienceIt              Boolean?               @default(false)
+  experienceIs              Boolean?               @default(false)
+  experienceItGs            Boolean?               @default(false)
+  experienceGps             Boolean?               @default(false)
+  experienceOther           Boolean?               @default(false)
+  clientName                String?
+
+  @@map("EmployeeExternalProjects")
+}
+
+//rdy
+model EmployeeProjectEmployeeRole {
+  id                          String                    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                   DateTime?                 @default(now())
+  updatedAt                   DateTime?                 @updatedAt
+  employeeID                  String                    @db.ObjectId
+  employee                    Employee                  @relation("EmployeeToEmployeeProjectEmployeeRole", fields: [employeeID], references: [id])
+  employeeRoleID              String                    @db.ObjectId
+  employeeRole                EmployeeRole              @relation("EmployeeProjectEmployeeRoleToEmployeeRole", fields: [employeeRoleID], references: [id])
+  employeeProjectActivitiesID String                    @db.ObjectId
+  employeeProjectActivities   EmployeeProjectActivities @relation("EmployeeProjectEmployeeRoleToEmployeeProjectActivities", fields: [employeeProjectActivitiesID], references: [id])
+}
+
+model Training {
+  id                 String             @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt          DateTime?          @default(now())
+  updatedAt          DateTime?          @updatedAt
+  trainingTitle      String
+  trainingContent    String?
+  trainingType       String?
+  trainingDate       DateTime?
+  trainingTemplateID String?            @db.ObjectId
+  trainingTemplate   Template?          @relation("TemplateToTraining", fields: [trainingTemplateID], references: [id])
+  employeeTrainings  EmployeeTraining[] @relation("TrainingToEmployee")
+
+  @@map("Training")
+}
+
+model EmployeeTraining {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  employeeID String    @db.ObjectId
+  employee   Employee  @relation("EmployeeToTraining", fields: [employeeID], references: [id])
+  trainingID String    @db.ObjectId
+  training   Training  @relation("TrainingToEmployee", fields: [trainingID], references: [id])
+  passed     Boolean   @default(false)
+  passedDate DateTime?
+  isTrainer  Boolean   @default(false)
+
+  @@map("EmployeeTraining")
+}
+
+// Organisation XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// Organisation Global Data
+
+//rdy
+model Location {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime?      @default(now())
+  updatedAt     DateTime?      @updatedAt
+  street        String
+  houseNumber   String
+  postCode      String
+  city          String
+  region        String
+  country       String
+  organisations Organisation[] @relation("OrganisationToLocation")
+  Employee      Employee[]
+}
+
+//rdy
+model IndustrySector {
+  id                           String                      @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                    DateTime?                   @default(now())
+  updatedAt                    DateTime?                   @updatedAt
+  industrySector               String
+  industrySectorEY             String?
+  conditionsOfParticipationIDs String[]                    @db.ObjectId
+  conditionsOfParticipation    ConditionsOfParticipation[] @relation("ConditionsOfParticipationToIndustrySector", fields: [conditionsOfParticipationIDs], references: [id])
+  organisationenIDs            String[]                    @db.ObjectId
+  organisationen               Organisation[]              @relation("OrganisationToIndustrySector", fields: [organisationenIDs], references: [id])
+  professionalBackground       ProfessionalBackground[]
+  voccational                  Voccational[]
+}
+
+// rdy 
+model OrganisationRole {
+  id                                               String                                  @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                                        DateTime?                               @default(now())
+  updatedAt                                        DateTime?                               @updatedAt
+  role                                             String
+  organisationProjectsRoleOrganisationRolesID      String?                                 @db.ObjectId
+  organisationProjectsOrganisationRoles            OrganisationProjectsOrganisationRoles[] @relation("OrganisationRoleToOrganisationProjectsOrganisationRoles")
+  organisationOrganisationRolesOrganisationRolesID String?                                 @db.ObjectId
+  organisationOrganisationRolesOrganisationRoles   OrganisationOrganisationRoles[]         @relation("OrganisationOrganisationRolesToOrganisationRole")
+  callToTenderOrganisations                        CallToTenderOrganisation[]
+}
+
+// Organisation Model
+
+//rdy
+model Organisation {
+  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt           DateTime? @default(now())
+  updatedAt           DateTime? @updatedAt
+  name                String    @unique
+  abbreviation        String?
+  anonymousIdentifier String?
+
+  parentOrganisation   Organisation? @relation("ParentToChild", fields: [parentOrganisationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentOrganisationId String?       @db.ObjectId
+
+  childOrganisations   Organisation[] @relation("ParentToChild")
+  childOrganisationsId String?        @db.ObjectId
+
+  employeeNumber           Int?
+  anualReturn              Float?
+  website                  String?
+  legalType                String?
+  industrySectorIDs        String[]                        @db.ObjectId
+  industrySector           IndustrySector[]                @relation("OrganisationToIndustrySector", fields: [industrySectorIDs], references: [id])
+  locationID               String?                         @db.ObjectId
+  location                 Location?                       @relation("OrganisationToLocation", fields: [locationID], references: [id])
+  projectIDs               String[]                        @db.ObjectId
+  project                  Project[]                       @relation("ProjectToOrganisation", fields: [projectIDs], references: [id])
+  projectAcitivities       OrganisationProjectActivities[] @relation("OrganisationToOrganisationProjectActivities")
+  organisationCertificates OrganisationCertificates[]      @relation("OrganisationToOrganisationCertificates")
+  callToTenderOrganisation CallToTenderOrganisation[]      @relation("OrganisationToCallToTenderOrganisation")
+  riskQualityProcesses     RiskQualityProcess[]            @relation("OrganisationToRiskQualityProcess")
+  lessonsLearned           LessonsLearned[]                @relation("OrganisationToLessonsLearned")
+
+  organisationContactsIDs               String[]                                @db.ObjectId
+  organisationContacts                  OrganisationContacts[]                  @relation("OrganisationToOrganisationContacts", fields: [organisationContactsIDs], references: [id])
+  organisationProjectsOrganisationRoles OrganisationProjectsOrganisationRoles[] @relation("OrganisationToOrganisationProjectsOrganisationRoles")
+  organisationOrganisationRoles         OrganisationOrganisationRoles[]         @relation("OrganisationOrganisationRolesToOrganisation")
+
+  @@map("Organisation")
+}
+
+// Organisation Individual Data
+
+model OrganisationProjectActivities {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime?    @default(now())
+  updatedAt       DateTime?    @updatedAt
+  organisationIDs String       @db.ObjectId
+  organisation    Organisation @relation("OrganisationToOrganisationProjectActivities", fields: [organisationIDs], references: [id])
+  projectIDs      String       @db.ObjectId
+  project         Project      @relation(fields: [projectIDs], references: [id])
+  role            String
+  description     String?
+
+  @@map("OrganisationProjectActivities")
+}
+
+//rdy
+model OrganisationCertificates {
+  id                  String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt           DateTime?    @default(now())
+  updatedAt           DateTime?    @updatedAt
+  organisationIDs     String       @db.ObjectId
+  organisation        Organisation @relation("OrganisationToOrganisationCertificates", fields: [organisationIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  certificateIDs      String       @db.ObjectId
+  certificate         Certificate  @relation(fields: [certificateIDs], references: [id])
+  certificationObject String?
+  validUntil          DateTime?
+
+  @@map("OrganisationCertificates")
+}
+
+//rdy
+model OrganisationContacts {
+  id                          String                    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                   DateTime?                 @default(now())
+  updatedAt                   DateTime?                 @updatedAt
+  CallToTenderOrganisationIDs String?                   @db.ObjectId
+  CallToTenderOrganisation    CallToTenderOrganisation? @relation(fields: [CallToTenderOrganisationIDs], references: [id])
+  organisationIDs             String[]                  @db.ObjectId
+  organisation                Organisation[]            @relation("OrganisationToOrganisationContacts", fields: [organisationIDs], references: [id])
+  foreName                    String
+  lastName                    String
+  email                       String?
+  mobile                      String?
+  telephone                   String?
+  position                    String?
+  department                  String?
+  salutationIDs               String[]                  @db.ObjectId
+  salutation                  Salutation[]              @relation(fields: [salutationIDs], references: [id])
+  projectIDs                  String[]                  @db.ObjectId
+  projectContacts             Project[]                 @relation("ProjectToOrganisationContacts", fields: [projectIDs], references: [id])
+  contactTenders              OrganisationContactTender[] @relation("OrganisationContactsToOrganisationContactTender")
+
+  @@map("OrganisationContacts")
+}
+
+model OrganisationContactTender {
+  id                     String              @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt              DateTime?           @default(now())
+  updatedAt              DateTime?           @updatedAt
+  organisationContactId  String              @db.ObjectId
+  organisationContact    OrganisationContacts @relation("OrganisationContactsToOrganisationContactTender", fields: [organisationContactId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  callToTenderId         String              @db.ObjectId
+  callToTender           CallToTender        @relation("CallToTenderToOrganisationContactTender", fields: [callToTenderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  role                   String?             // Role of contact in this specific tender
+  notes                  String?             // Any notes about this contact-tender relationship
+  isPrimaryContact       Boolean?            @default(false)
+
+  @@map("OrganisationContactTender")
+}
+
+model OrganisationProjectsOrganisationRoles {
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt          DateTime?        @default(now())
+  updatedAt          DateTime?        @updatedAt
+  organisationRoleID String           @db.ObjectId
+  organisationRole   OrganisationRole @relation("OrganisationRoleToOrganisationProjectsOrganisationRoles", fields: [organisationRoleID], references: [id])
+  organisationID     String           @db.ObjectId
+  organisation       Organisation     @relation("OrganisationToOrganisationProjectsOrganisationRoles", fields: [organisationID], references: [id])
+  projectID          String           @db.ObjectId
+  project            Project          @relation("ProjectToOrganisationProjectsOrganisationRoles", fields: [projectID], references: [id])
+}
+
+model OrganisationOrganisationRoles {
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt          DateTime?        @default(now())
+  updatedAt          DateTime?        @updatedAt
+  organisationRoleID String           @db.ObjectId
+  organisationRole   OrganisationRole @relation("OrganisationOrganisationRolesToOrganisationRole", fields: [organisationRoleID], references: [id])
+  organisationID     String           @db.ObjectId
+  organisation       Organisation     @relation("OrganisationOrganisationRolesToOrganisation", fields: [organisationID], references: [id])
+}
+
+// Project XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// Project Model
+
+model Project {
+  id                                    String                                  @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                             DateTime?                               @default(now())
+  UpdatedAt                             DateTime?                               @default(now())
+  callToTenderIDs                       String?                                 @db.ObjectId
+  callToTender                          CallToTender?                           @relation(fields: [callToTenderIDs], references: [id])
+  frameworkContractProjectIDs           String?                                 @db.ObjectId
+  frameworkContractProject              Project?                                @relation("ProjectToProject", fields: [frameworkContractProjectIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subProjects                           Project[]                               @relation("ProjectToProject")
+  type                                  String?
+  title                                 String?
+  referenceApproval                     Boolean?                                @default(false)
+  organisationContactsIDs               String[]                                @db.ObjectId
+  organisationContacts                  OrganisationContacts[]                  @relation("ProjectToOrganisationContacts", fields: [organisationContactsIDs], references: [id])
+  teamSize                              Int?
+  description                           String?
+  scopeAuditHours                       Int?
+  contractBeginn                        DateTime?
+  contractEnd                           DateTime?
+  volumeEuroTotal                       Float?
+  volumeEuroRetrieved                   Float?
+  volumePTTotal                         Int?
+  volumePTRetrieved                     Int?
+  volumeHoursTotal                      Float?
+  volumeHoursRetrieved                  Float?
+  keywords                              String[]
+  projectIT                             Boolean?                                @default(false)
+  projectIS                             Boolean?                                @default(false)
+  projectGS                             Boolean?                                @default(false)
+  standards                             String[]
+  approvedMargin                        Float?
+  firstContactDate                      DateTime?
+  serviceDate                           DateTime?
+  evbItContractNumber                   String?
+  evbItContractLocation                 String?
+  organisationIDs                       String[]                                @db.ObjectId
+  organisation                          Organisation[]                          @relation("ProjectToOrganisation", fields: [organisationIDs], references: [id])
+  EmployeeProjectActivities             EmployeeProjectActivities[]             @relation("ProjectToEmployeeProjectActivities")
+  OrganisationProjectActivities         OrganisationProjectActivities[]
+  organisationProjectsOrganisationRoles OrganisationProjectsOrganisationRoles[] @relation("ProjectToOrganisationProjectsOrganisationRoles")
+  referenceTenders                      CallToTenderProject[]                  @relation("ProjectToCallToTenderProject")
+
+  @@map("Project")
+}
+
+// CallToTender  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// CallToTender Model
+
+//rdy 
+model CallToTender {
+  id                     String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt              DateTime? @default(now())
+  updatedAt              DateTime? @updatedAt
+  title                  String?
+  type                   String?
+  // New procedure type reference
+  procedureTypeId        String?       @db.ObjectId
+  procedureType          ProcedureType? @relation("CallToTenderToProcedureType", fields: [procedureTypeId], references: [id])
+  shortDescription       String?
+  awardCriteria          String?
+  offerDeadline          DateTime?
+  questionDeadline       DateTime?
+  bindingDeadline        DateTime?
+  volumeEuro             Int?
+  volumePT               Int?
+  volumeHours            Float?
+  successChance          Int?
+  keywords               String[]
+  status                 String?
+  notes                  String?
+  websiteTenderPlattform String?
+  internalPlattform      String?
+  volumeHoursTotal       Float?
+  approvedMargin         Float?
+  firstContactDate       DateTime?
+  projectStart           DateTime?
+  projectEnd             DateTime?
+  runtime                String?
+  zugangsdatenVorhanden  Boolean?
+  // OCDS keys
+  ocid                   String? // contracting process identifier
+  noticeType             String? // TED eForms / BT‑02
+  releaseDate            DateTime? // mirrors TenderRelease.datePublished
+
+  organisations                  CallToTenderOrganisation[]      @relation("CallToTenderToOrganisation")
+  employees                      CallToTenderEmployee[]          @relation("CallToTenderToEmployee")
+  referenceProjects              CallToTenderProject[]           @relation("CallToTenderToProject")
+  conditionsOfParticipation      ConditionsOfParticipation[]     @relation("CallToTenderToConditionsOfParticipation")
+  lots                          Lot[]                           @relation("CallToTenderToLot")
+  templateIDs                    String[]                        @db.ObjectId
+  template                       Template[]                      @relation("CallToTenderToTemplate", fields: [templateIDs], references: [id])
+  callToTenderDeliverables       CallToTenderDeliverables[]      @relation("CallToTenderToCallToTenderDeliverables")
+  riskQualityProcesses           RiskQualityProcess[]
+  projectCallToTender            Project[]
+  tasks                          Task[]
+  lessonsLearned                 LessonsLearned[]                @relation("CallToTenderToLessonsLearned")
+  conditionsOfParticipationTypes ConditionsOfParticipationType[] @relation("CallToTenderToConditionsOfParticipationType")
+  contactTenders                 OrganisationContactTender[]     @relation("CallToTenderToOrganisationContactTender")
+
+  @@map("CallToTender")
+}
+
+// CallToTender Individual Data
+
+//rdy
+model CallToTenderOrganisation {
+  id                   String                 @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt            DateTime?              @default(now())
+  updatedAt            DateTime?              @updatedAt
+  organisationIDs      String                 @db.ObjectId
+  organisation         Organisation           @relation("OrganisationToCallToTenderOrganisation", fields: [organisationIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  callToTenderIDs      String                 @db.ObjectId
+  callToTender         CallToTender           @relation("CallToTenderToOrganisation", fields: [callToTenderIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  organisationRoleID   String                 @db.ObjectId
+  organisationRole     OrganisationRole       @relation(fields: [organisationRoleID], references: [id])
+  OrganisationContacts OrganisationContacts[]
+
+  @@map("CallToTenderOrganisation")
+}
+
+//rdy
+model CallToTenderEmployee {
+  id                       String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                DateTime?    @default(now())
+  updatedAt                DateTime?    @updatedAt
+  role                     String?
+  description              String?
+  profileTitle             String?
+  costCenter               Float?
+  profilePrice             Float?
+  travelCost               Float?
+  employeeId               String       @db.ObjectId
+  employee                 Employee     @relation("EmployeeToCallToTender", fields: [employeeId], references: [id])
+  callToTenderId           String       @db.ObjectId
+  callToTender             CallToTender @relation("CallToTenderToEmployee", fields: [callToTenderId], references: [id])
+  employeeCallToTenderRole String
+  autoSelected Boolean? @default(false)
+
+  @@map("CallToTenderEmployee")
+}
+
+// Statement of Work Data Models
+
+//rdy
+model Lot {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @updatedAt
+  // OCDS bridges
+  lotIdentifier String? // mirrors tender.lots.id
+  status        String?
+  number        String?
+  title         String?
+  description   String
+  volumeEuro    Float?
+  volumePT      Int?
+
+  // Self-referential relationship for nested lots
+  parentLotID  String? @db.ObjectId
+  parentLot    Lot?    @relation("LotToLots", fields: [parentLotID], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  childLots    Lot[]   @relation("LotToLots")
+
+  // Relationship to workpackages
+  workpackages Workpackage[]
+
+  callToTenderID String       @db.ObjectId
+  callToTender   CallToTender @relation("CallToTenderToLot", fields: [callToTenderID], references: [id])
+
+  @@map("Lot")
+}
+
+model Workpackage {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @updatedAt
+  number        String?
+  title         String?
+  description   String
+  volumeEuro    Float?
+  volumePT      Int?
+
+  // Relationship to parent lot
+  lotID        String @db.ObjectId
+  lot          Lot    @relation(fields: [lotID], references: [id])
+
+  @@map("Workpackage")
+}
+
+// Award Criteria Model
+//rdy
+model ConditionsOfParticipation {
+  id                               String                         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                        DateTime?                      @default(now())
+  updatedAt                        DateTime?                      @updatedAt
+  conditionsOfParticipationTypeIDs String                         @db.ObjectId
+  conditionsOfParticipationType    ConditionsOfParticipationType? @relation(fields: [conditionsOfParticipationTypeIDs], references: [id])
+  // New field to classify the criterion per OCDS‑EU
+  criterionType                    String? 
+  title                            String
+  duration                         Int?
+  volumeEuro                       Float?
+  requirements                     String?
+  experienceIt                     Int?
+  experienceIs                     Int?
+  experienceItGs                   Int?
+  experienceGPS                    Int?
+  experienceOther                  Int?
+  experienceAll                    Int?
+  executivePosition                Boolean?
+  academicDegree                   String[]
+  academicStudy                    String[]
+  // New fallback fields
+  customCertificates               String[]                       // For certificates not in the database
+  customIndustrySectors            String[]                       // For industry sectors not in the database
+  callToTenderIDs                  String                         @db.ObjectId
+  callToTender                     CallToTender?                  @relation("CallToTenderToConditionsOfParticipation", fields: [callToTenderIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  certificateIDs                   String[]                       @db.ObjectId
+  certificate                      Certificate[]                  @relation("ConditionsOfParticipationToCertificate", fields: [certificateIDs], references: [id])
+  industrySectorIDs                String[]                       @db.ObjectId
+  industrySector                   IndustrySector[]               @relation("ConditionsOfParticipationToIndustrySector", fields: [industrySectorIDs], references: [id])
+  searchQuery                      String?                        // Generated search query for auto-matching
+
+  @@map("ConditionsOfParticipation")
+}
+
+//rdy 
+model ConditionsOfParticipationType {
+  id                        String                          @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                 DateTime?                       @default(now())
+  updatedAt                 DateTime?                       @updatedAt
+  title                     String
+  description               String?
+  parentTypeIDs             String?                         @db.ObjectId
+  parentType                ConditionsOfParticipationType?  @relation("ConditionsOfParticipationTypeToConditionsOfParticipationType", fields: [parentTypeIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  childType                 ConditionsOfParticipationType[] @relation("ConditionsOfParticipationTypeToConditionsOfParticipationType")
+  ConditionsOfParticipation ConditionsOfParticipation[]
+  callToTenderIDs           String                          @db.ObjectId
+  callToTender              CallToTender                    @relation("CallToTenderToConditionsOfParticipationType", fields: [callToTenderIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("ConditionsOfParticipationType")
+}
+
+// CallToTender Deliverables Model
+//rdy
+model CallToTenderDeliverables {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime?    @default(now())
+  updatedAt       DateTime?    @updatedAt
+  callToTenderIDs String       @db.ObjectId
+  callToTender    CallToTender @relation("CallToTenderToCallToTenderDeliverables", fields: [callToTenderIDs], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  deliverablesIDs String       @db.ObjectId
+  deliverables    Deliverables @relation(fields: [deliverablesIDs], references: [id])
+  autoSelected Boolean? @default(false)
+
+  @@map("CallToTenderDeliverables")
+}
+
+// Internal Quality Process Model
+//rdy
+model RiskQualityProcess {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime?     @default(now())
+  updatedAt      DateTime?     @updatedAt
+  type           String
+  inhalt         String?
+  status         String
+  note           String?
+  callToTender   CallToTender  @relation(fields: [callToTenderID], references: [id])
+  callToTenderID String        @db.ObjectId
+  organisation   Organisation? @relation("OrganisationToRiskQualityProcess", fields: [organisationID], references: [id])
+  organisationID String?       @db.ObjectId
+
+  @@map("RiskQualityProcess")
+}
+
+// Misc XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// Deliverables Template Model
+//rdy
+model Template {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime?      @default(now())
+  updatedAt       DateTime?      @updatedAt
+  filePath        String //Ist das sinnvoll?
+  type            String
+  title           String
+  description     String?
+  keywords        String[]
+  notes           String?
+  callToTenderIDs String[]       @db.ObjectId
+  callToTender    CallToTender[] @relation("CallToTenderToTemplate", fields: [callToTenderIDs], references: [id])
+  deliverablesIDs String[]       @db.ObjectId
+  deliverables    Deliverables[] @relation("DeliverablesToTemplate", fields: [deliverablesIDs], references: [id])
+  trainings       Training[]     @relation("TemplateToTraining")
+
+  @@map("Template")
+}
+
+//rdy
+model Deliverables {
+  id                       String                     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                DateTime?                  @default(now())
+  updatedAt                DateTime?                  @updatedAt
+  type                     String
+  title                    String
+  description              String
+  status                   String?                    @default("draft")
+  textMaturity             Boolean?
+  wordCount                Int?
+  language                 String[]
+  genderNeutral            Boolean?
+  professionalTone         Boolean?
+  containsGraphics         Boolean?
+  keywords                 String[]
+  notes                    String?
+  templateIDs              String[]                   @db.ObjectId
+  template                 Template[]                 @relation("DeliverablesToTemplate", fields: [templateIDs], references: [id])
+  callToTenderDeliverables CallToTenderDeliverables[]
+
+  @@map("Deliverables")
+}
+
+// Certificates Model
+//rdy
+model Certificate {
+  id                           String                      @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                    DateTime?                   @default(now())
+  updatedAt                    DateTime?                   @updatedAt
+  title                        String                      @unique
+  description                  String?
+  type                         String?
+  deeplink                     String? // Optional deeplink/path
+  category                     String? // Optional category
+  salesCertificate             Boolean?                    @default(false) // Optional sales certificate flag
+  conditionsOfParticipationIDs String[]                    @db.ObjectId
+  conditionsOfParticipation    ConditionsOfParticipation[] @relation("ConditionsOfParticipationToCertificate", fields: [conditionsOfParticipationIDs], references: [id])
+  employeeCertificates         EmployeeCertificates[]
+  organisationCertificates     OrganisationCertificates[]
+}
+
+model Task {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime?    @default(now())
+  updatedAt    DateTime?    @updatedAt
+  title        String
+  description  String?
+  status       String       @default("TODO")
+  assignedToId String?      @db.ObjectId
+  assignedTo   Employee?    @relation("AssignedTasks", fields: [assignedToId], references: [id])
+  createdById  String       @db.ObjectId
+  createdBy    Employee     @relation("CreatedTasks", fields: [createdById], references: [id])
+  tenderId     String       @db.ObjectId
+  tender       CallToTender @relation(fields: [tenderId], references: [id])
+  dueDate      DateTime?
+
+  @@map("Task")
+}
+
+model LessonsLearned {
+  id                    String        @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt             DateTime?     @default(now())
+  updatedAt             DateTime?     @updatedAt
+  submissionDate        DateTime? // Datum Versand
+  decisionDate          DateTime? // Entscheidungsdatum
+  rejectionReasons      String? // Absagegründe
+  lessonsLearned        String // Main lessons learned text
+  wonByOrganisationId   String?       @db.ObjectId
+  wonByOrganisation     Organisation? @relation("OrganisationToLessonsLearned", fields: [wonByOrganisationId], references: [id])
+  wonByOrganisationName String? // Fallback if no organisation exists
+  tenderId              String        @db.ObjectId
+  tender                CallToTender  @relation("CallToTenderToLessonsLearned", fields: [tenderId], references: [id])
+  relatedProfiles       String[] // Array of profile IDs that this lesson is relevant for
+  relatedTasks          String[] // Array of task IDs that this lesson is relevant for
+
+  @@map("LessonsLearned")
+}
+
+model PitchModule {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+
+  // Basic pitch information
+  title       String   /// @description The title of the pitch module
+  description String   /// @description Brief description of the pitch module
+
+  // Static content sections (toggleable during document generation)
+  eyCyberSecurityService            String? /// @description EY Cyber Security Service description
+  allgemeineDatenUndFakten         String? /// @description Allgemeine Daten und Fakten
+  geschaeftsfelderUndTaetigkeiten  String? /// @description Geschäftsfelder und Darstellung der Unternehmenstätigkeiten
+  erklaerungBeschaeftigtenzahlen   String? /// @description Erklärung zu Beschäftigtenzahlen
+  erklaerungUmsatzzahl             String? /// @description Erklärung zur Umsatzzahl
+
+  @@map("pitch_modules")
+}
+
+model Division {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime? @default(now())
+  updatedAt    DateTime? @updatedAt
+  title        String    @unique
+  abbreviation String?
+
+  // Self-reference for sub-divisions
+  parentDivisionId String?    @db.ObjectId
+  parentDivision   Division?  @relation("DivisionToSubDivisions", fields: [parentDivisionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subDivisions     Division[] @relation("DivisionToSubDivisions")
+
+  // Relation to Employee for manager
+  managedById String?   @db.ObjectId
+  managedBy   Employee? @relation("DivisionManager", fields: [managedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  // Relation to Employee for members
+  employees Employee[] @relation("DivisionMembers")
+
+  @@map("Division")
+}
+
+// Add this new model before the end of the file
+model CallToTenderProject {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime?    @default(now())
+  updatedAt       DateTime?    @updatedAt
+  role            String?
+  description     String?
+  relevance       String?
+  projectId       String       @db.ObjectId
+  project         Project      @relation("ProjectToCallToTenderProject", fields: [projectId], references: [id])
+  callToTenderId  String       @db.ObjectId
+  callToTender    CallToTender @relation("CallToTenderToProject", fields: [callToTenderId], references: [id])
+  autoSelected    Boolean?     @default(false)
+
+  @@map("CallToTenderProject")
+}
+
+// Risk & Quality Type Model for settings
+model RiskQualityType {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+  title       String    @unique
+  description String?
+
+  @@map("RiskQualityType")
+}
+
+// Procedure Type Model for settings - defines types of tender procedures
+model ProcedureType {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+  title       String    @unique
+  description String?
+  
+  // Reference from CallToTender
+  callToTenders CallToTender[] @relation("CallToTenderToProcedureType")
+
+  @@map("ProcedureType")
+}
+
+// Email Template Model for configurable email communication
+model EmailTemplate {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt         DateTime? @default(now())
+  updatedAt         DateTime? @updatedAt
+  name              String    @unique  // Template name (e.g., "DSGVO E-Mail", "Rechtliche E-Mail")
+  type              String    // Template type (e.g., "dsgvo", "legal")
+  subject           String    // Email subject template
+  body              String    // Email body template
+  recipients        String[]  // Default recipients
+  ccRecipients      String[]  // Default CC recipients
+  description       String?   // Optional description
+  isActive          Boolean   @default(true) // Whether this template is active
+  
+  @@map("EmailTemplate")
+}
+
+// Search Orders XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// Search Order Model for storing and managing search configurations across all platforms
+model SearchOrder {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+  name        String    // User-defined name for the search order
+  description String?   // Optional description
+  isActive    Boolean   @default(true) // Whether this search order is currently active
+  
+  // User/Owner relationship
+  createdById String    @db.ObjectId
+  createdBy   Employee  @relation("CreatedSearchOrders", fields: [createdById], references: [id])
+  
+  // Search configurations for different platforms
+  searchConfigs SearchConfig[] @relation("SearchOrderToSearchConfig")
+  
+  // Execution settings
+  autoExecute      Boolean @default(false) // Whether to automatically execute this search
+  executionInterval Int?   // Minutes between automatic executions (if autoExecute is true)
+  lastExecutedAt   DateTime? // Last time this search order was executed
+  
+  // Notification settings
+  emailNotifications     Boolean @default(false) // Send email notifications for new results
+  notificationThreshold  Int     @default(0)     // Minimum number of new results to trigger notification
+  
+  // Executions relation
+  executions SearchExecution[]
+  
+  @@map("SearchOrder")
+}
+
+// Search Configuration for individual platforms within a Search Order
+model SearchConfig {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime?   @default(now())
+  updatedAt    DateTime?   @updatedAt
+  
+  // Platform identification
+  platform     String      // "ted", "oeffentlichevergabe", "bundservice"
+  isEnabled    Boolean     @default(true) // Whether this platform is enabled in the search
+  
+  // Generic search parameters
+  searchTerm   String?     // Search term/query
+  cpvCodes     String[]    // CPV codes to search for
+  countries    String[]    // Country codes to filter by
+  
+  // Date filters
+  dateFrom     DateTime?   // Start date for filtering
+  dateTo       DateTime?   // End date for filtering
+  
+  // Platform-specific configurations (stored as JSON)
+  platformConfig Json?     // Platform-specific settings like regions for bundservice
+  
+  // Result filtering
+  maxResults   Int         @default(50) // Maximum number of results to return
+  
+  // Relationship to search order
+  searchOrderId String     @db.ObjectId
+  searchOrder   SearchOrder @relation("SearchOrderToSearchConfig", fields: [searchOrderId], references: [id], onDelete: Cascade)
+  
+  @@map("SearchConfig")
+}
+
+// Search Execution Results - stores results from executed search orders
+model SearchExecution {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime? @default(now())
+  executedAt    DateTime  @default(now())
+  
+  // Reference to search order
+  searchOrderId String    @db.ObjectId
+  searchOrder   SearchOrder @relation(fields: [searchOrderId], references: [id], onDelete: Cascade)
+  
+  // Execution metadata
+  totalResults  Int       @default(0) // Total number of results found
+  newResults    Int       @default(0) // Number of new results (not seen before)
+  executionTimeMs Int     @default(0) // Execution time in milliseconds
+  
+  // Status and error handling
+  status        String    @default("pending") // "pending", "completed", "failed"
+  error         String?   // Error message if execution failed
+  
+  // Individual results
+  results       SearchResult[] @relation("SearchExecutionToSearchResult")
+  
+  @@map("SearchExecution")
+}
+
+// Individual search results from platform searches
+model SearchResult {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt         DateTime? @default(now())
+  
+  // Reference to execution
+  executionId       String    @db.ObjectId
+  execution         SearchExecution @relation("SearchExecutionToSearchResult", fields: [executionId], references: [id], onDelete: Cascade)
+  
+  // Platform information
+  platform          String    // "ted", "oeffentlichevergabe", "bundservice"
+  platformId        String    // Unique identifier from the platform
+  
+  // Content
+  title             String
+  description       String?
+  url               String?
+  
+  // Organizations
+  buyer             String?
+  buyerLocation     String?
+  buyerCountry      String?
+  
+  // Dates
+  publicationDate   DateTime?
+  deadline          DateTime?
+  
+  // Financial
+  estimatedValue    Float?
+  currency          String?
+  
+  // Classification
+  cpvCode           String?
+  cpvDescription    String?
+  noticeType        String?
+  
+  // Additional metadata (stored as JSON for platform-specific fields)
+  metadata          Json?
+  
+  // Tracking
+  isNew             Boolean   @default(true) // Whether this result is new in this execution
+  firstSeenAt       DateTime  @default(now()) // When this result was first discovered
+  
+  @@unique([platform, platformId]) // Ensure no duplicate results from same platform
+  @@map("SearchResult")
+}

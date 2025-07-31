@@ -1,0 +1,261 @@
+import { type FormFieldSchema } from "@/types/form";
+import type { ConditionsOfParticipation } from "@/server/controllers/tender/conditionsOfParticipation/schema";
+
+export const conditionsOfParticipationDefaultValues: Partial<ConditionsOfParticipation> = {
+  title: "",
+  duration: null,
+  volumeEuro: null,
+  requirements: null,
+  experienceIt: null,
+  experienceIs: null,
+  experienceItGs: null,
+  experienceGPS: null,
+  experienceOther: null,
+  experienceAll: null,
+  executivePosition: null,
+  academicDegree: [],
+  academicStudy: [],
+  certificateIDs: [],
+  customCertificates: [],
+  industrySectorIDs: [],
+  customIndustrySectors: [],
+  criterionType: null,
+};
+
+export function getConditionsOfParticipationFormFields(): FormFieldSchema[] {
+  return [
+    {
+      name: "title",
+      label: "Titel",
+      type: "text",
+      width: "full",
+      position: 1,
+      defaultValue: "",
+      section: {
+        id: "basic",
+        title: "Grundinformationen",
+      },
+    },
+    {
+      name: "criterionType",
+      label: "Kriterientyp",
+      type: "select",
+      width: "full",
+      position: 2,
+      defaultValue: null,
+      options: [
+        { label: "Muss-(A)Kriterium", value: "Muss-(A)Kriterium" },
+        { label: "Soll-(B)Kriterium", value: "Soll-(B)Kriterium" },
+        { label: "Kann-Kriterium", value: "Kann-Kriterium" },
+      ],
+      section: {
+        id: "basic",
+        title: "Grundinformationen",
+      },
+    },
+    {
+      name: "requirements",
+      label: "Anforderungen",
+      type: "textarea",
+      width: "full",
+      position: 3,
+      defaultValue: null,
+      section: {
+        id: "basic",
+        title: "Grundinformationen",
+      },
+    },
+    {
+      name: "duration",
+      label: "Dauer (in Monaten)",
+      type: "number",
+      width: "half",
+      position: 4,
+      defaultValue: null,
+      section: {
+        id: "volume",
+        title: "Volumen & Dauer",
+      },
+    },
+    {
+      name: "volumeEuro",
+      label: "Volumen (in Euro)",
+      type: "number",
+      width: "half",
+      position: 5,
+      defaultValue: null,
+      section: {
+        id: "volume",
+        title: "Volumen & Dauer",
+      },
+    },
+    {
+      name: "experienceIt",
+      label: "IT-Erfahrung (in Jahren)",
+      type: "number", 
+      width: "half",
+      position: 6,
+      defaultValue: null,
+      section: {
+        id: "experience",
+        title: "Erfahrung",
+      },
+    },
+    {
+      name: "experienceIs",
+      label: "IS-Erfahrung (in Jahren)",
+      type: "number", 
+      width: "half",
+      position: 7,
+      defaultValue: null,
+      section: {
+        id: "experience",
+        title: "Erfahrung",
+      },
+    },
+    {
+      name: "experienceItGs",
+      label: "IT-GS-Erfahrung (in Jahren)",
+      type: "number", 
+      width: "half",
+      position: 8,
+      defaultValue: null,
+      section: {
+        id: "experience",
+        title: "Erfahrung",
+      },
+    },
+    {
+      name: "experienceGPS",
+      label: "GPS-Erfahrung (in Jahren)",
+      type: "number",
+      width: "half",
+      position: 9,
+      defaultValue: null,
+      section: {
+        id: "experience",
+        title: "Erfahrung",
+      },
+    },
+    {
+      name: "experienceOther",
+      label: "Sonstige Erfahrung (in Jahren)",
+      type: "number",
+      width: "half",
+      position: 10,
+      defaultValue: null,
+      section: {
+        id: "experience",
+        title: "Erfahrung",
+      },
+    },
+    {
+      name: "experienceAll",
+      label: "Gesamterfahrung (in Jahren)",
+      type: "number",
+      width: "half",
+      position: 11,
+      defaultValue: null,
+      section: {
+        id: "experience",
+        title: "Erfahrung",
+      },
+    },
+    {
+      name: "executivePosition",
+      label: "Führungsposition",
+      type: "checkbox",
+      width: "full",
+      position: 12,
+      defaultValue: null,
+      section: {
+        id: "experience",
+        title: "Erfahrung",
+      },
+    },
+    {
+      name: "academicDegree",
+      label: "Akademische Abschlüsse",
+      type: "tags",
+      width: "half",
+      position: 13,
+      defaultValue: [],
+      section: {
+        id: "education",
+        title: "Ausbildung & Zertifikate",
+      },
+    },
+    {
+      name: "academicStudy",
+      label: "Studiengänge",
+      type: "tags",
+      width: "half",
+      position: 14,
+      defaultValue: [],
+      section: {
+        id: "education",
+        title: "Ausbildung & Zertifikate",
+      },
+    },
+    {
+      name: "certificateIDs",
+      label: "Zertifikate",
+      type: "command",
+      width: "half",
+      position: 15,
+      defaultValue: [],
+      options: {
+        endpoint: "certificate.getAll",
+        labelField: "title",
+        valueField: "id",
+        multiple: true
+      },
+      section: {
+        id: "education",
+        title: "Ausbildung & Zertifikate",
+      },
+    },
+    {
+      name: "customCertificates",
+      label: "Weitere Zertifikate",
+      type: "tags",
+      width: "half",
+      position: 16,
+      defaultValue: [],
+      section: {
+        id: "education",
+        title: "Ausbildung & Zertifikate",
+      },
+    },
+    {
+      name: "industrySectorIDs",
+      label: "Branchen",
+      type: "command",
+      width: "half",
+      position: 17,
+      defaultValue: [],
+      options: {
+        endpoint: "industrySector.getAll",
+        labelField: "industrySector",
+        valueField: "id",
+        multiple: true
+      },
+      section: {
+        id: "education",
+        title: "Ausbildung & Zertifikate",
+      },
+    },
+    {
+      name: "customIndustrySectors",
+      label: "Weitere Branchen",
+      type: "tags",
+      width: "half",
+      position: 18,
+      defaultValue: [],
+      section: {
+        id: "education",
+        title: "Ausbildung & Zertifikate",
+      },
+    },
+  ];
+} 

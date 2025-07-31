@@ -1,0 +1,254 @@
+[
+  {
+    "title": "Projekt-/Programmmanagement",
+    "description": "",
+    "type": "Employee",
+    "category": "Projektmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "Prince2 Foundation Certificate (APMG)",
+    "description": "",
+    "type": "Employee",
+    "category": "Projektmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "Prince2 Practitioner Certificate (APMG)",
+    "description": "",
+    "type": "Employee",
+    "category": "Projektmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "Project Management Professional (PMP)",
+    "description": "",
+    "type": "Employee",
+    "category": "Projektmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "COBIT Practitioner (ISACA)",
+    "description": "",
+    "type": "Employee",
+    "category": "Governance & Prozesse",
+    "salesCertificate": false
+  },
+  {
+    "title": "Foundation Certificate in IT Service Management (ITIL)",
+    "description": "",
+    "type": "Employee",
+    "category": "Governance & Prozesse",
+    "salesCertificate": false
+  },
+  {
+    "title": "ISO 20000-1 Lead Auditor (PERSICON cert)",
+    "description": "",
+    "type": "Employee",
+    "category": "Governance & Prozesse",
+    "salesCertificate": false
+  },
+  {
+    "title": "ITIL Foundation (APMG)",
+    "description": "",
+    "type": "Employee",
+    "category": "Governance & Prozesse",
+    "salesCertificate": false
+  },
+  {
+    "title": "ITIL Managing Professional (APMG)",
+    "description": "",
+    "type": "Employee",
+    "category": "Governance & Prozesse",
+    "salesCertificate": false
+  },
+  {
+    "title": "ITIL Master APMG)/IITIL Expert (APMG)",
+    "description": "",
+    "type": "Employee",
+    "category": "Governance & Prozesse",
+    "salesCertificate": false
+  },
+  {
+    "title": "ITIL Strategic Leader (APMG)",
+    "description": "",
+    "type": "Employee",
+    "category": "Governance & Prozesse",
+    "salesCertificate": false
+  },
+  {
+    "title": "IT-Grundschutz-Praktiker (EY)",
+    "description": "",
+    "type": "Employee",
+    "category": "Informationssicherheitsmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "BSI IT-Grundschutz-Berater",
+    "description": "",
+    "type": "Employee",
+    "category": "Informationssicherheitsmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "BSI IT-Grundschutz Auditor",
+    "description": "",
+    "type": "Employee",
+    "category": "Informationssicherheitsmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "IS -Revisions- und IS -Beratungs-Experte (IS-Revisor)",
+    "description": "",
+    "type": "Employee",
+    "category": "Informationssicherheitsmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "Zertifizierung als Auditteamleiter für ISO 27001-Audits auf der Basis von IT-Grundschutz (Auditteamleiter)",
+    "description": "",
+    "type": "Employee",
+    "category": "Informationssicherheitsmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "Geprüfter ISO 27001 Auditor",
+    "description": "",
+    "type": "Employee",
+    "category": "Informationssicherheitsmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "Geprüfter IT-Sicherheitsbeauftragter (SGS TÜV)[MF1]",
+    "description": "",
+    "type": "Employee",
+    "category": "Informationssicherheitsmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "ISO 27001 Lead Auditor (PERSICON cert)[MF2]",
+    "description": "",
+    "type": "Employee",
+    "category": "Informationssicherheitsmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "Information Security Practitioner (ISP)",
+    "description": "",
+    "type": "Employee",
+    "category": "Informationssicherheitsmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "Cyber Security Practitioner (CSP)",
+    "description": "",
+    "type": "Employee",
+    "category": "Informationssicherheitsmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "Certified Information Security Manager (CISM)",
+    "description": "",
+    "type": "Employee",
+    "category": "Informationssicherheitsmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "Certified Information System Auditor (CISA)",
+    "description": "",
+    "type": "Employee",
+    "category": "Informationssicherheitsmanagement",
+    "salesCertificate": false
+  },
+  {
+    "title": "Certified Ethical Hacker (CEH)",
+    "description": "",
+    "type": "Employee",
+    "category": "Technische Sicherheit",
+    "salesCertificate": false
+  },
+  {
+    "title": "IS-Pentester (BSI)",
+    "description": "",
+    "type": "Employee",
+    "category": "Technische Sicherheit",
+    "salesCertificate": false
+  },
+  {
+    "title": "Certified Cloud Security Professional (CCSP)",
+    "description": "",
+    "type": "Employee",
+    "category": "Technische Sicherheit",
+    "salesCertificate": false
+  },
+  {
+    "title": "Certified Information System Security Professional (CISSP)",
+    "description": "",
+    "type": "Employee",
+    "category": "Technische Sicherheit",
+    "salesCertificate": false
+  },
+  {
+    "title": "LPIC-1",
+    "description": "",
+    "type": "Employee",
+    "category": "Technische Sicherheit",
+    "salesCertificate": false
+  },
+  {
+    "title": "LPIC-2",
+    "description": "",
+    "type": "Employee",
+    "category": "Technische Sicherheit",
+    "salesCertificate": false
+  },
+  {
+    "title": "LPIC-3",
+    "description": "",
+    "type": "Employee",
+    "category": "Technische Sicherheit",
+    "salesCertificate": false
+  },
+  {
+    "title": "EuroPriSe Technical and Legal Expert (ULD)",
+    "description": "",
+    "type": "Employee",
+    "category": "Technische Sicherheit",
+    "salesCertificate": false
+  },
+  {
+    "title": "EuroPriSe Technical Expert (ULD)",
+    "description": "",
+    "type": "Employee",
+    "category": "Technische Sicherheit",
+    "salesCertificate": false
+  },
+  {
+    "title": "BCM-Praktiker (BSI)",
+    "description": "",
+    "type": "Employee",
+    "category": "Business Continuity",
+    "salesCertificate": false
+  },
+  {
+    "title": "Geprüfter Datenschutzbeauftragter (SGS TÜV)",
+    "description": "",
+    "type": "Employee",
+    "category": "Datenschutz",
+    "salesCertificate": false
+  },
+  {
+    "title": "Zertifizierter Datenschutzbeauftragter (Ulmer Model)",
+    "description": "",
+    "type": "Employee",
+    "category": "Datenschutz",
+    "salesCertificate": false
+  },
+  {
+    "title": "EuroPriSe Legal Expert (ULD)",
+    "description": "",
+    "type": "Employee",
+    "category": "Datenschutz",
+    "salesCertificate": false
+  }
+]
