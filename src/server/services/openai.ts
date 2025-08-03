@@ -6,7 +6,7 @@ import Docxtemplater from 'docxtemplater';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
-  apiKey: env.OPENAI_API_KEY,
+  apiKey: env.OPENAI_API_KEY || 'dummy-key-for-development',
 });
 
 export type DocumentContent = {
