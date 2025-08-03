@@ -222,6 +222,7 @@ const Page = ({ params }: PageProps) => {
   const fallbackTender = isProblematicTender ? {
     ...tender,
     status: "Nicht angeboten",
+    notes: tender?.notes ? tender.notes + "." : "Test-Änderung.",
     organisations: [
       {
         id: "688fd039d11db03bef8e49c1",
