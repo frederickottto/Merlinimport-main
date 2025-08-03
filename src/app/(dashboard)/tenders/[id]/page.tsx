@@ -197,10 +197,23 @@ const Page = ({ params }: PageProps) => {
 
   // Data fetching
   const { data: tender, isLoading, error: tenderError } = api.tenders.getById.useQuery(
-    { id: id ?? "" },
+    { 
+      id: id ?? "",
+      // Add cache-busting timestamp to force fresh data
+      _timestamp: Date.now()
+    },
     {
       retry: false,
       enabled: !!id,
+      staleTime: 0, // Force fresh data
+      refetchOnMount: true,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      cacheTime: 0,
+      refetchInterval: 1000, // Refetch every second for debugging
+      // Add additional cache-busting options
+      refetchIntervalInBackground: true,
+      keepPreviousData: false,
     }
   );
 

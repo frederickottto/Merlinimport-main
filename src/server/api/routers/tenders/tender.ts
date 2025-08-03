@@ -189,7 +189,10 @@ export const tenderRouter = createTRPCRouter({
 				summary: "Get tender by ID",
 			},
 		})
-		.input(z.object({ id: z.string() }))
+		.input(z.object({ 
+			id: z.string(),
+			_timestamp: z.number().optional() // Add optional timestamp for cache busting
+		}))
 		.query(async ({ ctx, input }) => {
 			try {
 				const tender = await ctx.db.callToTender.findUnique({
