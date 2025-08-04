@@ -16,7 +16,7 @@ export const profileColumns: ColumnDef<EmployeeWithRelations>[] = [
   {
     id: "name",
     header: "Name",
-    accessorFn: (row) => `${row.foreName} ${row.lastName}`,
+    accessorFn: (row) => row.pseudonym || "-",
     enableSorting: true,
     enableHiding: false,
   },

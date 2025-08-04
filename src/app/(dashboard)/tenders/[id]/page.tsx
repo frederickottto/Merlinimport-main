@@ -217,26 +217,20 @@ const Page = ({ params }: PageProps) => {
     }
   );
 
-  // HARDCODED FALLBACK: For the specific problematic tender, always show correct data
-  const isProblematicTender = id === "688fa3c25dd9356b3d7d0634";
-  const fallbackTender = isProblematicTender ? {
+  // Ensure organisations data is properly included for DetailView
+  const displayTender = tender ? {
     ...tender,
-    status: "Nicht angeboten",
-    notes: tender?.notes ? tender.notes + "." : "Test-Änderung.",
-    organisations: [
-      {
-        id: "688fd039d11db03bef8e49c1",
-        organisation: {
-          id: "688ca356529479d94470ca2b",
-          name: "gematik"
-        },
-        organisationRole: "Auftraggeber"
-      }
-    ]
+    organisations: tender.organisations || [],
+    // Ensure organisations have the correct structure for DetailView
+    organisations: tender.organisations?.map(org => ({
+      id: org.id,
+      organisation: {
+        id: org.organisation?.id || org.id,
+        name: org.organisation?.name || org.name || 'Unbekannt'
+      },
+      organisationRole: org.organisationRole || 'Auftraggeber'
+    })) || []
   } : tender;
-
-  // Use fallbackTender instead of tender throughout the component
-  const displayTender = fallbackTender;
 
   const { data: conditions } = api.conditionsOfParticipation.getByTenderId.useQuery(
     { tenderId: id ?? "" },

@@ -105,13 +105,6 @@ export const detailSchema: DetailSchema = {
         
         // Return the mapped value or the original value if not found
         const mappedValue = statusMap[statusValue];
-        console.log("Status transformation:", { input: statusValue, output: mappedValue || statusValue });
-        
-        // FALLBACK: If this is the specific tender that's having issues, always show "Nicht angeboten"
-        if (statusValue && (statusValue.toLowerCase().includes('nicht') || statusValue.toLowerCase().includes('angeboten'))) {
-          console.log("Using fallback status for problematic tender");
-          return "Nicht angeboten";
-        }
         
         return mappedValue || statusValue;
       },
@@ -147,15 +140,9 @@ export const detailSchema: DetailSchema = {
         });
         
         const orgsToShow = clientOrganisations.length > 0 ? clientOrganisations : organisations;
-        const result = orgsToShow.map(org => org.organisation.name).join(", ");
+        const result = orgsToShow.map(org => org.organisation?.name || org.name || 'Unbekannt').join(", ");
         
-        // FALLBACK: If no organisations found but this is the specific tender, show "gematik"
-        if (!result && organisations.length === 0) {
-          console.log("Using fallback organisation for problematic tender");
-          return "gematik";
-        }
-        
-        return result;
+        return result || "-";
       },
       section: {
         id: "overview",

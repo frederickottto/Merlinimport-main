@@ -22,8 +22,8 @@ export const detailSchema: DetailSchema = {
       width: "full",
       section: { id: "overview", title: "Übersicht", position: 1 },
       transform: (value: unknown) => {
-        if (typeof value === 'object' && value !== null && 'foreName' in value && 'lastName' in value) {
-          return `${value.foreName} ${value.lastName}`.trim();
+        if (typeof value === 'object' && value !== null && 'pseudonym' in value) {
+          return value.pseudonym || String(value);
         }
         return String(value);
       },
@@ -44,6 +44,9 @@ export const detailSchema: DetailSchema = {
           DEVELOPER: "Entwickler",
           TESTER: "Tester",
           OTHER: "Sonstiges",
+          "Opp Partner": "Opp Partner",
+          "Fachverantwortlicher": "Fachverantwortlicher",
+          "Lead Vertrieb": "Lead Vertrieb",
         };
         return roleMap[value] || value;
       },

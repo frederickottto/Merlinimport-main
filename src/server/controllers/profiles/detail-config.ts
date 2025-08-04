@@ -11,8 +11,8 @@ export const detailSchema: DetailSchema = {
   fields: [
     // Personal Information
     {
-      name: "foreName",
-      label: "Vorname",
+      name: "pseudonym",
+      label: "Nachname",
       type: "text",
       position: 1,
       width: "half",
@@ -24,39 +24,12 @@ export const detailSchema: DetailSchema = {
         position: 1
       },
     },
-    {
-      name: "lastName",
-      label: "Nachname",
-      type: "text",
-      position: 2,
-      width: "half",
-      section: {
-        id: "overview",
-        title: "Übersicht",
-        subsection: "personal",
-        subsectionTitle: "Persönliche Informationen",
-        position: 1
-      },
-    },
-    {
-      name: "pseudonym",
-      label: "Pseudonym",
-      type: "text",
-      position: 3,
-      width: "half",
-      section: {
-        id: "overview",
-        title: "Übersicht",
-        subsection: "personal",
-        subsectionTitle: "Persönliche Informationen",
-        position: 1
-      },
-    },
+
     {
       name: "employeerCompany",
       label: "Arbeitgeber",
       type: "text",
-      position: 4,
+      position: 2,
       width: "half",
       section: {
         id: "overview",
@@ -70,7 +43,7 @@ export const detailSchema: DetailSchema = {
       name: "counselor",
       label: "Counselor",
       type: "text",
-      position: 5,
+      position: 3,
       width: "half",
       section: {
         id: "overview",
@@ -107,7 +80,7 @@ export const detailSchema: DetailSchema = {
       name: "division",
       label: "Abteilung",
       type: "text",
-      position: 6,
+      position: 4,
       width: "half",
       section: {
         id: "overview",
@@ -305,7 +278,7 @@ export const detailSchema: DetailSchema = {
       name: "employeeRank",
       label: "Mitarbeiter-Rang",
       type: "text",
-      position: 6,
+      position: 5,
       width: "half",
       section: {
         id: "overview",
@@ -320,7 +293,7 @@ export const detailSchema: DetailSchema = {
       name: "location",
       label: "Standort",
       type: "text",
-      position: 7,
+      position: 6,
       width: "half",
       section: {
         id: "overview",
@@ -343,7 +316,7 @@ export const detailSchema: DetailSchema = {
       name: "contractStartDate",
       label: "Vertragsbeginn",
       type: "date",
-      position: 8,
+      position: 7,
       width: "half",
       section: {
         id: "overview",
