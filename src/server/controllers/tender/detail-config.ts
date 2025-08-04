@@ -120,27 +120,47 @@ export const detailSchema: DetailSchema = {
       type: "text",
       position: 4,
       transform: (value: unknown): ReactNode => {
+        console.log("🔍 Organisations transform called with:", value);
+        
         if (!value || !Array.isArray(value)) {
+          console.log("❌ No organisations data or not an array");
           return "-";
         }
         
         const organisations = value as any[];
+        console.log("🔍 Organisations array length:", organisations.length);
         
         // Show all organisations, not just 'Client' ones
         if (organisations.length === 0) {
+          console.log("❌ Organisations array is empty");
           return "-";
         }
+        
+        // Log each organisation for debugging
+        organisations.forEach((org, index) => {
+          console.log(`🔍 Organisation ${index + 1}:`, {
+            id: org.id,
+            name: org.organisation?.name,
+            role: org.organisationRole,
+            fullOrg: org
+          });
+        });
         
         // Filter for "Auftraggeber" role if available, otherwise show all
         const clientOrganisations = organisations.filter(org => {
           const role = typeof org.organisationRole === 'string' 
             ? org.organisationRole 
             : org.organisationRole?.role;
+          console.log(`🔍 Checking role: "${role}" for org: ${org.organisation?.name}`);
           return !role || role === 'Auftraggeber';
         });
         
+        console.log("🔍 Client organisations found:", clientOrganisations.length);
+        
         const orgsToShow = clientOrganisations.length > 0 ? clientOrganisations : organisations;
         const result = orgsToShow.map(org => org.organisation?.name || org.name || 'Unbekannt').join(", ");
+        
+        console.log("🎯 Final result:", result);
         
         return result || "-";
       },

@@ -220,8 +220,7 @@ const Page = ({ params }: PageProps) => {
   // Ensure organisations data is properly included for DetailView
   const displayTender = tender ? {
     ...tender,
-    organisations: tender.organisations || [],
-    // Ensure organisations have the correct structure for DetailView
+    // Force include organisations data with proper structure
     organisations: tender.organisations?.map(org => ({
       id: org.id,
       organisation: {
